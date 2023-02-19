@@ -1,0 +1,311 @@
+{
+	"info": {
+		"_postman_id": "a5103879-aba6-4041-9ab0-1f0fc7e78a0d",
+		"name": "Robocorp API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18282208"
+	},
+	"item": [
+		{
+			"name": "List process runs (for a process)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var response = pm.response.json();\r",
+							"\r",
+							"var template = `\r",
+							"    <table>\r",
+							"        <tr>\r",
+							"            <th>Process Name</th>\r",
+							"            <th>Run number</th>\r",
+							"            <th>State</th>\r",
+							"            <th>Total Workitems</th>\r",
+							"            <th>Completed Woritems</th>\r",
+							"            <th>Failed Workitems</th>\r",
+							"            <th>Initiator</th>\r",
+							"        </tr>\r",
+							"\r",
+							"        {{#each response.data}}\r",
+							"            <tr>\r",
+							"                <td>{{processName}}</td>\r",
+							"                <td>{{runNo}}</td>\r",
+							"                <td>{{state}}</td>\r",
+							"                <td>{{workItemStats.totalCount}}</td>\r",
+							"                <td>{{workItemStats.succeededCount}}</td>\r",
+							"                <td>{{workItemStats.failedCount}}</td>\r",
+							"                <td>{{triggerSource.details.first_name}} {{triggerSource.details.last_name}}</td>\r",
+							"            </tr>\r",
+							"        {{/each}}\r",
+							"    </table>\r",
+							"`;\r",
+							"\r",
+							"// Set visualizer\r",
+							"pm.visualizer.set(template, {\r",
+							"    // Pass the response body parsed as JSON as `data`\r",
+							"    response: pm.response.json()\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							"/*\r",
+							"var template = `\r",
+							"    <b>Application Number: `+appNumber+`</b>\r",
+							"    <table>\r",
+							"        <tr>\r",
+							"            <th>Process Name</th>\r",
+							"            <th>caseNumber</th>\r",
+							"            <th>Completed?</th>\r",
+							"            <th>Pending manual tasks within Sub-Process</th>\r",
+							"        </tr>\r",
+							"\r",
+							"        {{#each response.value}}\r",
+							"            <tr>\r",
+							"                <td>{{processName}}</td>\r",
+							"                <td>{{caseNumber}}</td>\r",
+							"                <td {{#if closed}} bgcolor=\"green\" {{else}} bgcolor=\"yellow\" {{/if}}>{{closed}}</td>\r",
+							"                <td>{{#each workitems}} {{taskDisplayName}}; {{/each}}</td>\r",
+							"                \r",
+							"            </tr>\r",
+							"        {{/each}}\r",
+							"    </table>\r",
+							"`;\r",
+							"*/"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.eu1.robocorp.com/process-v1/workspaces/{{workspaceId}}/processes/{{processId}}/runs?limit=100",
+					"protocol": "https",
+					"host": [
+						"api",
+						"eu1",
+						"robocorp",
+						"com"
+					],
+					"path": [
+						"process-v1",
+						"workspaces",
+						"{{workspaceId}}",
+						"processes",
+						"{{processId}}",
+						"runs"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "100"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get process run work items summary",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "RC-WSKEY 2Mypw27MakJ517212jjgcmUPljBR9usbPx3ndEkm1fmU7BwRpUHv78jaR8laIhMats69tfNx3AICEisQL5XH72JAaL4Jtc0VuJRNr3Qls2KH2HAje3Yi4Txy1fOE"
+					}
+				],
+				"url": {
+					"raw": "https://api.eu1.robocorp.com/process-v1/workspaces/{{workspaceId}}/processes/{{processId}}/runs/{{processRunId}}/work-items-summary?",
+					"protocol": "https",
+					"host": [
+						"api",
+						"eu1",
+						"robocorp",
+						"com"
+					],
+					"path": [
+						"process-v1",
+						"workspaces",
+						"{{workspaceId}}",
+						"processes",
+						"{{processId}}",
+						"runs",
+						"{{processRunId}}",
+						"work-items-summary"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get process run status",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.eu1.robocorp.com/process-v1/workspaces/{{workspaceId}}/processes/{{processId}}/runs/{{processRunId}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"eu1",
+						"robocorp",
+						"com"
+					],
+					"path": [
+						"process-v1",
+						"workspaces",
+						"{{workspaceId}}",
+						"processes",
+						"{{processId}}",
+						"runs",
+						"{{processRunId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List Processes",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//process name\r",
+							"var proccesName = \"Workitems\"\r",
+							"\r",
+							"//response.data[?(@.name==\"Workitems\")].id\r",
+							"//filter for id\r",
+							"_.each(pm.response.json().data, (item) => {\r",
+							"    if(item.name === proccesName) {\r",
+							"        pm.collectionVariables.set(\"processId\", item.id);\r",
+							"        console.log(item.id)\r",
+							"    }\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.eu1.robocorp.com/process-v1/workspaces/{{workspaceId}}/processes?",
+					"protocol": "https",
+					"host": [
+						"api",
+						"eu1",
+						"robocorp",
+						"com"
+					],
+					"path": [
+						"process-v1",
+						"workspaces",
+						"{{workspaceId}}",
+						"processes"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List robot runs",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.eu1.robocorp.com/process-v1/workspaces/{{workspaceId}}/processes/{{processId}}/runs/{{processRunId}}/robotRuns?limit=10",
+					"protocol": "https",
+					"host": [
+						"api",
+						"eu1",
+						"robocorp",
+						"com"
+					],
+					"path": [
+						"process-v1",
+						"workspaces",
+						"{{workspaceId}}",
+						"processes",
+						"{{processId}}",
+						"runs",
+						"{{processRunId}}",
+						"robotRuns"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "key",
+				"value": "Authorization",
+				"type": "string"
+			},
+			{
+				"key": "value",
+				"value": "{{Authorization}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "workspaceId",
+			"value": "17835069-25a7-48c0-938c-8d3da0142d64"
+		},
+		{
+			"key": "processId",
+			"value": "53f81879-833f-4841-8cd6-ef9266dba562"
+		},
+		{
+			"key": "processRunId",
+			"value": "bfaecb60-16a6-44fd-975f-4f7493b3b4da"
+		}
+	]
+}
